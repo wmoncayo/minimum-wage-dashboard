@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>U.S. Minimum Wage Dashboard</title>
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#wage-table">Skip to data table</a>
+    <div class="app-shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Compensation market intelligence</p>
+          <h1>U.S. Minimum Wage Dashboard</h1>
+          <p class="subtitle">
+            State and local minimum-wage rates from the team workbook, with source notes and review signals preserved.
+          </p>
+          <div class="hero-badges" aria-label="Dashboard status">
+            <span class="status-badge">Share-ready static dashboard</span>
+            <span class="status-badge muted-badge">No login required after deployment</span>
+          </div>
+        </div>
+        <div class="hero-meta" aria-live="polite">
+          <span>Last data update</span>
+          <strong id="lastUpdated">Loading...</strong>
+          <small id="sourceWorkbook">Source workbook pending</small>
+        </div>
+      </header>
+
+      <section id="loadError" class="status-panel error-panel" hidden>
+        <h2>Data could not be loaded</h2>
+        <p id="loadErrorText"></p>
+        <button id="retryLoad" class="primary-button" type="button">Retry</button>
+      </section>
+
+      <section id="loadingState" class="status-panel">
+        <div class="spinner" aria-hidden="true"></div>
+        <div>
+          <h2>Loading dashboard data</h2>
+          <p>Reading generated wage data and map geometry.</p>
+        </div>
+      </section>
+
+      <main id="dashboard" hidden>
+        <section class="summary-grid" id="summaryCards" aria-label="Summary"></section>
+        <section id="activeFilters" class="active-filters" aria-live="polite"></section>
+
+        <section class="dashboard-layout" aria-label="Minimum wage map dashboard">
+          <aside class="control-panel" aria-label="Filters">
+            <div class="panel-kicker">Dashboard controls</div>
+            <div class="control-block">
+              <label for="searchInput">Search</label>
+              <input id="searchInput" type="search" placeholder="State, city, county">
+            </div>
+
+            <div class="control-block">
+              <span class="control-label">View</span>
+              <div class="segmented" role="group" aria-label="Map view">
+                <button type="button" class="segment active" data-view="state" aria-pressed="true">State wage</button>
+                <button type="button" class="segment" data-view="local" aria-pressed="false">Local wage</button>
+              </div>
+            </div>
+
+            <div class="control-block compact-options">
+              <label class="check-row">
+                <input id="exceptionsOnly" type="checkbox">
+                <span>Local exceptions only</span>
+              </label>
+              <label class="check-row">
+                <input id="indexedOnly" type="checkbox">
+                <span>Indexed to inflation</span>
+              </label>
+            </div>
+
+            <div class="control-block">
+              <label for="compareMode">Compare</label>
+              <select id="compareMode">
+                <option value="none">Wage amount</option>
+                <option value="federal">Gap above federal</option>
+                <option value="average">Gap above state average</option>
+                <option value="selected">Gap above selected state</option>
+                <option value="threshold">Above or below threshold</option>
+              </select>
+            </div>
+
+            <div class="control-block" id="selectedStateControl" hidden>
+              <label for="compareState">Selected state</label>
+              <select id="compareState"></select>
+            </div>
+
+            <div class="control-block" id="thresholdControl" hidden>
+              <label for="thresholdInput">Threshold</label>
+              <div class="inline-input">
+                <span>$</span>
+                <input id="thresholdInput" type="number" min="7.25" max="30" step="0.25" value="15">
+              </div>
+            </div>
+
+            <div class="control-actions">
+              <button id="resetFilters" type="button" class="secondary-button">Reset</button>
+              <button id="exportCsv" type="button" class="primary-button">Export CSV</button>
+              <button id="exportPng" type="button" class="secondary-button">Export PNG</button>
+            </div>
+          </aside>
+
+          <section class="map-panel" aria-label="Interactive U.S. minimum wage map">
+            <div class="map-toolbar">
+              <div>
+                <h2 id="mapTitle">State minimum wage</h2>
+                <p id="mapSubtitle">Minimum wage varies by state and local jurisdiction.</p>
+              </div>
+              <div id="legend" class="legend" aria-label="Map legend"></div>
+            </div>
+            <div class="map-wrap">
+              <svg id="usMap" role="img" aria-labelledby="mapTitle mapSubtitle"></svg>
+              <div id="tooltip" class="tooltip" role="status" aria-live="polite" hidden></div>
+            </div>
+          </section>
+
+          <aside class="detail-panel" id="detailPanel" aria-label="Details">
+            <div class="empty-detail">
+              <h2>Select a state</h2>
+              <p>Hover for a quick read. Click or press Enter on a state for details, local exceptions, and source notes.</p>
+            </div>
+          </aside>
+        </section>
+
+        <section class="insight-grid" aria-label="Data review">
+          <article class="insight-panel">
+            <div class="panel-heading">
+              <h2>Highest and Lowest</h2>
+              <span id="rankCount" class="pill"></span>
+            </div>
+            <div id="rankedLocations" class="rank-list"></div>
+          </article>
+          <article class="insight-panel">
+            <div class="panel-heading">
+              <h2>What Changed</h2>
+              <span id="changeCount" class="pill"></span>
+            </div>
+            <div id="changeList" class="change-list"></div>
+          </article>
+          <article class="insight-panel">
+            <div class="panel-heading">
+              <h2>Data Quality</h2>
+              <span id="qualityStatus" class="pill"></span>
+            </div>
+            <div id="qualityList" class="quality-list"></div>
+          </article>
+        </section>
+
+        <section class="table-section" id="wage-table" aria-label="Minimum wage table">
+          <div class="table-heading">
+            <div>
+              <h2>Filtered Wage Data</h2>
+              <p id="tableCount"></p>
+            </div>
+            <select id="tableScope" aria-label="Table scope">
+              <option value="all">States and localities</option>
+              <option value="states">States only</option>
+              <option value="locals">Localities only</option>
+            </select>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th><button type="button" data-sort="name">Location</button></th>
+                  <th><button type="button" data-sort="state">State</button></th>
+                  <th><button type="button" data-sort="scope">Scope</button></th>
+                  <th class="number"><button type="button" data-sort="rate">Wage</button></th>
+                  <th class="number"><button type="button" data-sort="gapFederal">Federal gap</button></th>
+                  <th><button type="button" data-sort="effectiveDate">Effective</button></th>
+                  <th><button type="button" data-sort="indexed">Indexed</button></th>
+                </tr>
+              </thead>
+              <tbody id="wageTableBody"></tbody>
+            </table>
+          </div>
+          <div id="emptyTable" class="empty-state" hidden>No matching wage records.</div>
+        </section>
+      </main>
+    </div>
+    <script src="./app.js" defer></script>
+  </body>
+</html>
