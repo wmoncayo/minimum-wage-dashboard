@@ -1,0 +1,12 @@
+{
+  "encoding": "gzip-base64",
+  "source": "minimum-wage.json",
+  "generatedAt": "2026-06-08T20:07:09+00:00",
+  "dataVersion": "f64539f6a08a",
+  "parts": [
+    "minimum-wage.b64.part-001.txt",
+    "minimum-wage.b64.part-002.txt",
+    "minimum-wage.b64.part-003.txt",
+    "minimum-wage.b64.part-004.txt"
+  ]
+}
