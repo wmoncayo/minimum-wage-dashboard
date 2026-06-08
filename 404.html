@@ -55,6 +55,14 @@
             </div>
 
             <div class="control-block">
+              <span class="control-label">Rate period</span>
+              <div class="segmented mode-toggle" role="group" aria-label="Rate period">
+                <button type="button" class="segment active" data-mode="current" aria-pressed="true">Current</button>
+                <button type="button" class="segment" data-mode="future" aria-pressed="false">Future / Upcoming</button>
+              </div>
+            </div>
+
+            <div class="control-block">
               <span class="control-label">View</span>
               <div class="segmented" role="group" aria-label="Map view">
                 <button type="button" class="segment active" data-view="state" aria-pressed="true">State wage</button>
@@ -101,6 +109,7 @@
               <button id="resetFilters" type="button" class="secondary-button">Reset</button>
               <button id="exportCsv" type="button" class="primary-button">Export CSV</button>
               <button id="exportPng" type="button" class="secondary-button">Export PNG</button>
+              <button id="printMap" type="button" class="secondary-button">Print</button>
             </div>
           </aside>
 
@@ -126,7 +135,7 @@
           </aside>
         </section>
 
-        <section class="insight-grid" aria-label="Data review">
+        <section class="insight-grid" aria-label="Data review" hidden>
           <article class="insight-panel">
             <div class="panel-heading">
               <h2>Highest and Lowest</h2>
