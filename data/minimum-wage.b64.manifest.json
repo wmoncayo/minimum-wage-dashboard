@@ -4,9 +4,12 @@
   "generatedAt": "2026-06-08T20:07:09+00:00",
   "dataVersion": "f64539f6a08a",
   "parts": [
-    "minimum-wage.b64.part-001.txt",
-    "minimum-wage.b64.part-002.txt",
-    "minimum-wage.b64.part-003.txt",
-    "minimum-wage.b64.part-004.txt"
+    "minimum-wage.gz.b64.part-001.txt",
+    "minimum-wage.gz.b64.part-002.txt",
+    "minimum-wage.gz.b64.part-003.txt",
+    "minimum-wage.gz.b64.part-004.txt",
+    "minimum-wage.gz.b64.part-005.txt",
+    "minimum-wage.gz.b64.part-006.txt",
+    "minimum-wage.gz.b64.part-007.txt"
   ]
 }
