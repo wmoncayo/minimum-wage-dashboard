@@ -1,0 +1,14 @@
+{
+  "encoding": "base64",
+  "source": "src/app.js",
+  "parts": [
+    "app.b64.part-001.txt",
+    "app.b64.part-002.txt",
+    "app.b64.part-003.txt",
+    "app.b64.part-004.txt",
+    "app.b64.part-005.txt",
+    "app.b64.part-006.txt",
+    "app.b64.part-007.txt",
+    "app.b64.part-008.txt"
+  ]
+}
